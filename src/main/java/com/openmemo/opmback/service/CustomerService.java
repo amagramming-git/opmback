@@ -26,8 +26,7 @@ public class CustomerService {
     }
 
     public int save(Customer customer) {
-        // return customerMapper.save(customer);
-        return 1;
+        return customerMapper.save(customer);
     }
 
     private List<CustomerDto> setCustomerDtoList(List<Customer> customerList) {
