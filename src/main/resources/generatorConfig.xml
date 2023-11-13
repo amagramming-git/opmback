@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  <!-- mysqlconnectorは手動ダウンロードした 8.1.0 -->
+  <classPathEntry location="/opmback/src/main/resources/mysql-connector-j.jar"/> 
+  <context id="post" targetRuntime="MyBatis3" >
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver" connectionURL="jdbc:mysql://mysql/openmemo" userId="root" password="root" />
+    <javaModelGenerator targetPackage="com.openmemo.opmback.mapper.post" targetProject="src/main/java" />
+    <sqlMapGenerator targetPackage="com.openmemo.opmback.mapper.post" targetProject="src/main/java" />
+    <javaClientGenerator targetPackage="com.openmemo.opmback.mapper.post" targetProject="src/main/java" type="XMLMAPPER" />
+    <table schema="openmemo_database" tableName="post" ></table>
+  </context>
+  <context id="customer" targetRuntime="MyBatis3" >
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver" connectionURL="jdbc:mysql://mysql/openmemo" userId="root" password="root" />
+    <javaModelGenerator targetPackage="com.openmemo.opmback.mapper.customer" targetProject="src/main/java" />
+    <sqlMapGenerator targetPackage="com.openmemo.opmback.mapper.customer" targetProject="src/main/java" />
+    <javaClientGenerator targetPackage="com.openmemo.opmback.mapper.customer" targetProject="src/main/java" type="XMLMAPPER" />
+    <table schema="openmemo_database" tableName="customer" ></table>
+  </context>
+</generatorConfiguration>
+<!-- MyBatisを使う際には、pom.xmlに追記及びApplication.javaに@MapperScan("com.openmemo.opmback.mapper")を追記-->
+<!-- 実行コマンド: java -jar "./src/main/resources/mybatis-generator-core-1.4.2.jar" -configfile "./src/main/resources/generatorConfig.xml" -overwrite -->

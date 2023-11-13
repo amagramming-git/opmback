@@ -1,0 +1,5 @@
+Spring InitのShareURL
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.1.5&packaging=jar&jvmVersion=17&groupId=com.open-memo&artifactId=opmback&name=opmback&description=Demo%20project%20for%20Spring%20Boot&packageName=com.open-memo.opmback&dependencies=web,mybatis,security,lombok,mysql,devtools
+
+ローカルの環境構築について大変参考になった記事。
+https://qiita.com/ichi-ken/items/e9b157c5ab1fab364c3e

@@ -1,0 +1,38 @@
+services:
+  java:
+    build: ./dockerfiles/localdevelop
+    container_name: java
+    env_file:
+      - ./mysql/db.env # mysqlと同じものを指定
+    tty: true
+    working_dir: /opmback #コンテナ内のワーキングディレクトリ
+    volumes:
+      - type: bind # source(ホストマシン)のディレクトリをtarget(コンテナ)にマウントする
+        source: .
+        target: /opmback
+    ports:
+      - 8080:8080 # 通常実行
+      - 5050:5050 # デバッグ用
+    depends_on:
+      - mysql
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+  mysql:
+    # imageの指定ではなく、Dockerfileを用意している。
+    # 理由：ビルドの過程で必要な情報を読み取ることが可能。
+    # 補足：docker-compose.ymlではビルド後にコンテナへマウントする。
+    build: ./mysql
+    container_name: mysql
+    env_file:
+      - ./mysql/db.env #MySQLの設定ファイル
+    volumes:
+      - mysql_data:/var/lib/mysql #実データの永読化
+      - ./mysql/sql_init:/docker-entrypoint-initdb.d
+      # - ./mysql/log:/var/log/mysql #logの永読化
+    ports:
+      - 3306:3306
+
+volumes:
+  mysql_data:
+    name: spring_boot_mysql
