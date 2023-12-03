@@ -93,4 +93,8 @@ public interface PostMapper {
      * @mbg.generated Tue Nov 07 08:48:29 JST 2023
      */
     int updateByPrimaryKey(Post row);
+
+    int updateByPrimaryKeyCustom(Post row);
+
+    int insertCustom(Post row);
 }

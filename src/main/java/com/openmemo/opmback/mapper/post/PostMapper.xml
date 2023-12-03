@@ -283,4 +283,13 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <insert id="insertCustom" parameterType="com.openmemo.opmback.mapper.post.Post">
+    insert into post (customerId, content)
+    values (#{customerid,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeyCustom" parameterType="com.openmemo.opmback.mapper.post.Post">
+    update post
+    set content = #{content,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>
