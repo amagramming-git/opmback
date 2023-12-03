@@ -27,6 +27,7 @@ import com.openmemo.opmback.entity.customer.get.CustomerGetResponce;
 import com.openmemo.opmback.entity.customer.register.CustomerRegisterRequest;
 import com.openmemo.opmback.entity.customer.register.CustomerRegisterResponce;
 import com.openmemo.opmback.mapper.customer.Customer;
+import com.openmemo.opmback.service.AuthorityService;
 import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.util.ConstantUtil;
 
@@ -38,6 +39,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private AuthorityService authorityService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -52,10 +56,17 @@ public class CustomerController {
             customer.setEmail(req.getEmail());
             customer.setPassword(passwordEncoder.encode(req.getPassword()));
             customer.setUsername(req.getUsername());
-            customer.setRole(req.getRole());
             // ここにバリデーションやチェックがあればmessagesに加える
             if (messages.size() == 0) {
                 registerCount = customerService.save(customer);
+                if (registerCount == 1) {
+                    authorityService.insertRoleUser(customerService.findByEmail(customer.getEmail()).get(0).getId());
+                } else {
+                    LOGGER.error(ConstantUtil.API_RESULT_ERROR_MESSAGE, "Error when saving user role");
+                    MessageBody message = new MessageBody();
+                    message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE);
+                    messages.add(message);
+                }
             }
 
             CustomerRegisterResponce res = new CustomerRegisterResponce();
@@ -87,7 +98,6 @@ public class CustomerController {
             } else {
                 res.setEmail(customerList.get(0).getEmail());
                 res.setUsername(customerList.get(0).getUsername());
-                res.setRole(customerList.get(0).getRole());
             }
 
             if (messages.size() != 0) {

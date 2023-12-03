@@ -8,13 +8,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TestController {
     @GetMapping("/normaltest")
     @ResponseBody
-    public String test() {
+    public String normaltest() {
         return "normaltest";
     }
 
     @GetMapping("/authtest")
     @ResponseBody
-    public String test2() {
+    public String authtest() {
         return "authtest";
+    }
+
+    @GetMapping("/usertest")
+    @ResponseBody
+    public String usertest() {
+        return "usertest";
+    }
+
+    @GetMapping("/admintest")
+    @ResponseBody
+    public String admintest() {
+        return "admintest";
+    }
+
+    @GetMapping("/anytest")
+    @ResponseBody
+    public String anytest() {
+        return "anytest";
     }
 }

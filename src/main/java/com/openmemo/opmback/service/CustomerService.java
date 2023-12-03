@@ -44,7 +44,6 @@ public class CustomerService {
         dto.setEmail(customer.getEmail());
         dto.setUsername(customer.getUsername());
         dto.setPassword(customer.getPassword());
-        dto.setRole(customer.getRole());
         return dto;
     }
 }

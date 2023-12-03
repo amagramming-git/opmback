@@ -47,7 +47,10 @@ public class ProjectSecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/customer/get", "/post/**", "/authtest").authenticated() // 認証の必要なリクエスト
+                        .requestMatchers("/admintest").hasRole("ADMIN")
+                        .requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/usertest", "/customer/get", "/post/**").hasRole("USER")
+                        .requestMatchers("/authtest").authenticated() // 認証の必要なリクエスト
                         .requestMatchers("/customer/register", "/normaltest").permitAll()) // 認証の必要無いリクエスト
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());

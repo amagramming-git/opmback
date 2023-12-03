@@ -16,6 +16,4 @@ public class CustomerDto {
     private String username;
     @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    @JsonProperty("role")
-    private String role;
 }

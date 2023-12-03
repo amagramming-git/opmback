@@ -15,6 +15,4 @@ public class CustomerGetResponce extends CustomerResponce {
     private String email;
     @JsonProperty("username")
     private String username;
-    @JsonProperty("role")
-    private String role;
 }

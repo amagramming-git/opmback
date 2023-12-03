@@ -2,6 +2,7 @@ package com.openmemo.opmback.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,13 +15,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.openmemo.opmback.entity.authority.AuthorityDto;
 import com.openmemo.opmback.entity.customer.CustomerDto;
+import com.openmemo.opmback.service.AuthorityService;
 import com.openmemo.opmback.service.CustomerService;
 
 @Component
 public class ProjectAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private AuthorityService authorityService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -33,13 +38,21 @@ public class ProjectAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("No user registered with this details!");
         } else {
             if (passwordEncoder.matches(pwd, customerList.get(0).getPassword())) {
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(customerList.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(email, pwd, authorities);
+                List<GrantedAuthority> grantedAuthorities = getGrantedAuthorities(
+                        authorityService.selectCustomerId(customerList.get(0).getId()));
+                return new UsernamePasswordAuthenticationToken(email, pwd, grantedAuthorities);
             } else {
                 throw new BadCredentialsException("Invalid password!");
             }
         }
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<AuthorityDto> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (AuthorityDto authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getRolename()));
+        }
+        return grantedAuthorities;
     }
 
     @Override
