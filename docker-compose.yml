@@ -17,6 +17,8 @@ services:
       - mysql
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
+    networks:
+      - opm_network
 
   mysql:
     # imageの指定ではなく、Dockerfileを用意している。
@@ -32,7 +34,14 @@ services:
       # - ./mysql/log:/var/log/mysql #logの永読化
     ports:
       - 3306:3306
+    networks:
+      - opm_network
 
 volumes:
   mysql_data:
     name: spring_boot_mysql
+
+networks:
+  opm_network:
+    driver: bridge
+    internal: false
