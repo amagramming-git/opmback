@@ -7,6 +7,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,16 +27,17 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = request.getHeader(ConstantSecurity.JWT_HEADER);
-        if (null != jwt) {
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authorizationType = authorizationHeader.split(" ")[0];
+        String token = authorizationHeader.split(" ")[1];
+        if (authorizationType.equals("Bearer") && (null != token)) {
             try {
                 SecretKey key = Keys.hmacShaKeyFor(
                         ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(key)
                         .build()
-                        .parseClaimsJws(jwt)
+                        .parseClaimsJws(token)
                         .getBody();
                 String username = String.valueOf(claims.get("username"));
                 String authorities = (String) claims.get("authorities");

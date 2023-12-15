@@ -5,6 +5,7 @@ import java.util.Collections;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.openmemo.opmback.filter.CsrfCookieFilter;
+import java.util.Arrays;
 import com.openmemo.opmback.filter.JwtTokenGeneratorFilter;
 import com.openmemo.opmback.filter.JwtTokenValidatorFilter;
 
@@ -38,6 +40,7 @@ public class ProjectSecurityConfig {
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION,"X-Xsrf-Token"));
                         config.setMaxAge(3600L);
                         return config;
                     }

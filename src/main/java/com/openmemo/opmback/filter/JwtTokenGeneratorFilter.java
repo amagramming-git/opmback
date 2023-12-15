@@ -6,6 +6,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +36,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
                     .setIssuedAt(new Date())
                     .setExpiration(new Date((new Date()).getTime() + 30000000))
                     .signWith(key).compact();
-            response.setHeader(ConstantSecurity.JWT_HEADER, jwt);
+            response.setHeader(HttpHeaders.AUTHORIZATION, jwt);
         }
 
         filterChain.doFilter(request, response);
