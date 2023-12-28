@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerGetResponce extends CustomerResponce {
+    @JsonProperty("id")
+    private Integer id;
     @JsonProperty("email")
     private String email;
     @JsonProperty("username")

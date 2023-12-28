@@ -98,6 +98,7 @@ public class CustomerController {
             } else {
                 res.setEmail(customerList.get(0).getEmail());
                 res.setUsername(customerList.get(0).getUsername());
+                res.setId(customerList.get(0).getId());
             }
 
             if (messages.size() != 0) {
