@@ -28,26 +28,27 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String authorizationType = authorizationHeader.split(" ")[0];
-        String token = authorizationHeader.split(" ")[1];
-        if (authorizationType.equals("Bearer") && (null != token)) {
-            try {
-                SecretKey key = Keys.hmacShaKeyFor(
-                        ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(key)
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-                String username = String.valueOf(claims.get("username"));
-                String authorities = (String) claims.get("authorities");
-                Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
-                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                throw new BadCredentialsException("Invalid Token received!");
+        if (null != authorizationHeader){
+            String authorizationType = authorizationHeader.split(" ")[0];
+            String token = authorizationHeader.split(" ")[1];
+            if (authorizationType.equals("Bearer") && (null != token)) {
+                try {
+                    SecretKey key = Keys.hmacShaKeyFor(
+                            ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
+                    Claims claims = Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
+                    String username = String.valueOf(claims.get("username"));
+                    String authorities = (String) claims.get("authorities");
+                    Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
+                            AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } catch (Exception e) {
+                    throw new BadCredentialsException("Invalid Token received!");
+                }
             }
-
         }
         filterChain.doFilter(request, response);
     }
