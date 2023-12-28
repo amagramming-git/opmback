@@ -57,7 +57,7 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/usertest", "/post/**").hasRole("USER")
                         .requestMatchers("/customer/get", "/authtest").authenticated() // 認証の必要なリクエスト
                         .requestMatchers("/customer/register", "/normaltest").permitAll()) // 認証の必要無いリクエスト
-                .formLogin(Customizer.withDefaults())
+                // .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
