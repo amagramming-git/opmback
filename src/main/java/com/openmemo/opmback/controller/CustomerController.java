@@ -57,6 +57,14 @@ public class CustomerController {
             customer.setPassword(passwordEncoder.encode(req.getPassword()));
             customer.setUsername(req.getUsername());
             // ここにバリデーションやチェックがあればmessagesに加える
+            // emailがすでに存在している場合はエラーとする。
+            List<CustomerDto> customerList = customerService.findByEmail(req.getEmail());
+            if (customerList.size() != 0) {
+                LOGGER.error(ConstantUtil.API_RESULT_ERROR_MESSAGE_ALREADY_EXISTS);
+                MessageBody message = new MessageBody();
+                message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_ALREADY_EXISTS);
+                messages.add(message);
+            }
             if (messages.size() == 0) {
                 registerCount = customerService.save(customer);
                 if (registerCount == 1) {

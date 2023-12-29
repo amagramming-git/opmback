@@ -9,4 +9,5 @@ public class ConstantUtil {
     public static final String API_RESULT_SUCCESS_MESSAGE = "正常終了";
     // API処理メッセージ エラー
     public static final String API_RESULT_ERROR_MESSAGE = "システムエラーが発生しました。";
+    public static final String API_RESULT_ERROR_MESSAGE_ALREADY_EXISTS = "すでに同一のEmailでユーザが存在しています。";
 }
