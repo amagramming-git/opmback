@@ -118,6 +118,35 @@ public class CustomerController {
             return responseError(e);
         }
     }
+    
+    @GetMapping("me")
+    public ResponseEntity<Object> me(Authentication authentication) {
+        try {
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            List<CustomerDto> customerList = new ArrayList<CustomerDto>();
+            // ここにバリデーションやチェックがあればmessagesに加える
+            if (messages.size() == 0) {
+                customerList = customerService.findByEmail(authentication.getName());
+            }
+
+            CustomerGetResponce res = new CustomerGetResponce();
+            if (customerList.size() != 1) {
+                throw new BadCredentialsException("No user registered with this details!");
+            } else {
+                res.setEmail(customerList.get(0).getEmail());
+                res.setUsername(customerList.get(0).getUsername());
+                res.setId(customerList.get(0).getId());
+            }
+
+            if (messages.size() != 0) {
+                return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
+            } else {
+                return getResponseEntity(messages, res, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 
     protected ResponseEntity<Object> responseError(Exception e) {
         LOGGER.error(ConstantUtil.API_RESULT_ERROR_MESSAGE, e);

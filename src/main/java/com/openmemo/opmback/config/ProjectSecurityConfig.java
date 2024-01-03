@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,7 @@ import com.openmemo.opmback.filter.CsrfCookieFilter;
 import java.util.Arrays;
 import com.openmemo.opmback.filter.JwtTokenGeneratorFilter;
 import com.openmemo.opmback.filter.JwtTokenValidatorFilter;
+import java.util.function.Consumer;
 
 @Configuration
 public class ProjectSecurityConfig {
@@ -30,6 +32,15 @@ public class ProjectSecurityConfig {
 
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
+        
+        Consumer<ResponseCookie.ResponseCookieBuilder> cookieCustomizer = (cookie) -> {
+            cookie.secure(true);
+            cookie.httpOnly(false);
+            cookie.path("/");
+            cookie.sameSite("None");
+        };
+        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        cookieCsrfTokenRepository.setCookieCustomizer(cookieCustomizer);
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -40,23 +51,23 @@ public class ProjectSecurityConfig {
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
-                        config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION,"X-Xsrf-Token"));
+                        config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION));
                         config.setMaxAge(3600L);
                         return config;
                     }
                 }))
                 .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
-                        .ignoringRequestMatchers("/customer/register") // csrfの例外を設定
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                        .ignoringRequestMatchers("/customer/register","/userposttest") // csrfの例外を設定
+                        .csrfTokenRepository(cookieCsrfTokenRepository))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/admintest").hasRole("ADMIN")
                         .requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/usertest", "/post/**").hasRole("USER")
-                        .requestMatchers("/customer/get", "/authtest").authenticated() // 認証の必要なリクエスト
-                        .requestMatchers("/customer/register", "/normaltest").permitAll()) // 認証の必要無いリクエスト
+                        .requestMatchers("/usertest","/userposttest", "/post/**").hasRole("USER")
+                        .requestMatchers("/authtest","/customer/get", "/customer/me").authenticated() // 認証の必要なリクエスト
+                        .requestMatchers("/normaltest","/customer/register").permitAll()) // 認証の必要無いリクエスト
                 // .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
