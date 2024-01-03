@@ -34,6 +34,7 @@ public class ProjectSecurityConfig {
         requestHandler.setCsrfRequestAttributeName("_csrf");
         
         Consumer<ResponseCookie.ResponseCookieBuilder> cookieCustomizer = (cookie) -> {
+            // cookie.secure(true);
             cookie.secure(true);
             cookie.httpOnly(false);
             cookie.path("/");
@@ -56,10 +57,11 @@ public class ProjectSecurityConfig {
                         return config;
                     }
                 }))
-                .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
-                        .ignoringRequestMatchers("/customer/register","/userposttest") // csrfの例外を設定
-                        .csrfTokenRepository(cookieCsrfTokenRepository))
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                // .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
+                //         .ignoringRequestMatchers("/customer/register","/customer/me") // csrfの例外を設定
+                //         .csrfTokenRepository(cookieCsrfTokenRepository))
+                // .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .csrf((csrf) -> csrf.disable())
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
