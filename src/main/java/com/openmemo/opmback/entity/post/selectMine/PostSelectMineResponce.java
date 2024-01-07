@@ -1,4 +1,4 @@
-package com.openmemo.opmback.entity.post.selectAll;
+package com.openmemo.opmback.entity.post.selectMine;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostSelectAllResponce extends PostResponce {
+public class PostSelectMineResponce extends PostResponce {
     @JsonProperty("body")
-    private PostSelectAllResponseBody body;
+    private PostSelectMineResponseBody body;
 }

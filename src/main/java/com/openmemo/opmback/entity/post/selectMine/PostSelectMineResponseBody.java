@@ -1,4 +1,4 @@
-package com.openmemo.opmback.entity.post.selectAll;
+package com.openmemo.opmback.entity.post.selectMine;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostSelectAllResponseBody {
+public class PostSelectMineResponseBody {
     @JsonProperty("post_list")
     private List<PostDto> postList;
 }

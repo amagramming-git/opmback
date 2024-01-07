@@ -19,9 +19,10 @@ public class PostService {
     @Autowired
     private PostMapper postMapper;
 
-    public List<PostDto> selectAll() {
+    public List<PostDto> selectMine(Integer customerId) {
         PostExample postExample = new PostExample();
         postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId);
         List<Post> postList = postMapper.selectByExample(postExample);
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;

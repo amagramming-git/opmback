@@ -1,4 +1,4 @@
-package com.openmemo.opmback.entity.post.selectAll;
+package com.openmemo.opmback.entity.post.selectMine;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.openmemo.opmback.entity.post.PostRequest;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostSelectAllRequest extends PostRequest {
+public class PostSelectMineRequest extends PostRequest {
 
 }

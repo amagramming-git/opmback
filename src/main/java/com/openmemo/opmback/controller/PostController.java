@@ -31,9 +31,9 @@ import com.openmemo.opmback.entity.post.insert.PostInsertRequest;
 import com.openmemo.opmback.entity.post.insert.PostInsertResponce;
 import com.openmemo.opmback.entity.post.select.PostSelectResponce;
 import com.openmemo.opmback.entity.post.select.PostSelectResponseBody;
-import com.openmemo.opmback.entity.post.selectAll.PostSelectAllRequest;
-import com.openmemo.opmback.entity.post.selectAll.PostSelectAllResponce;
-import com.openmemo.opmback.entity.post.selectAll.PostSelectAllResponseBody;
+import com.openmemo.opmback.entity.post.selectMine.PostSelectMineRequest;
+import com.openmemo.opmback.entity.post.selectMine.PostSelectMineResponce;
+import com.openmemo.opmback.entity.post.selectMine.PostSelectMineResponseBody;
 import com.openmemo.opmback.entity.post.update.PostUpdateRequest;
 import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.service.PostService;
@@ -52,17 +52,19 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping
-    public ResponseEntity<Object> selectAll(@RequestBody PostSelectAllRequest req) {
+    public ResponseEntity<Object> selectMine(@RequestBody PostSelectMineRequest req, Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             List<PostDto> resultPostList = new ArrayList<PostDto>();
+            Integer customerId = getCurrentCustomerId(authentication);
+
             // ここにバリデーションやチェックがあればmessagesに加える
             if (messages.size() == 0) {
-                resultPostList = postService.selectAll();
+                resultPostList = postService.selectMine(customerId);
             }
 
-            PostSelectAllResponce res = new PostSelectAllResponce();
-            PostSelectAllResponseBody body = new PostSelectAllResponseBody();
+            PostSelectMineResponce res = new PostSelectMineResponce();
+            PostSelectMineResponseBody body = new PostSelectMineResponseBody();
             body.setPostList(resultPostList);
             res.setBody(body);
 
@@ -78,13 +80,22 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("{id}")
-    public ResponseEntity<Object> select(@RequestBody PostSelectAllRequest req, @PathVariable Integer id) {
+    public ResponseEntity<Object> select(@RequestBody PostSelectMineRequest req, @PathVariable Integer id, Authentication authentication) {
         try {
+            // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
-            PostDto result = new PostDto();
+            Integer customerId = getCurrentCustomerId(authentication);
+
             // ここにバリデーションやチェックがあればmessagesに加える
+
+            PostDto result = new PostDto();
             if (messages.size() == 0) {
                 result = postService.select(id);
+                if(result.getCustomerid() != customerId){
+                    MessageBody message = new MessageBody();
+                    message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_DIFFERENT_USER);
+                    messages.add(message);
+                }
             }
 
             PostSelectResponce res = new PostSelectResponce();
@@ -114,6 +125,7 @@ public class PostController {
             int insertCount = 0;
             if (messages.size() == 0) {
                 insertCount = postService.insert(req, customerId);
+                
             }
 
             // 後処理
