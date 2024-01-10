@@ -119,7 +119,7 @@ public class CustomerController {
         }
     }
     
-    @PostMapping("me")
+    @GetMapping("me")
     public ResponseEntity<Object> me(Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();

@@ -19,29 +19,27 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.openmemo.opmback.filter.CsrfCookieFilter;
 import java.util.Arrays;
 import com.openmemo.opmback.filter.JwtTokenGeneratorFilter;
 import com.openmemo.opmback.filter.JwtTokenValidatorFilter;
-import java.util.function.Consumer;
 
 @Configuration
 public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
-        requestHandler.setCsrfRequestAttributeName("_csrf");
+        // CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        // requestHandler.setCsrfRequestAttributeName("_csrf");
         
-        Consumer<ResponseCookie.ResponseCookieBuilder> cookieCustomizer = (cookie) -> {
-            // cookie.secure(true);
-            cookie.secure(true);
-            cookie.httpOnly(false);
-            cookie.path("/");
-            cookie.sameSite("None");
-        };
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        cookieCsrfTokenRepository.setCookieCustomizer(cookieCustomizer);
+        // Consumer<ResponseCookie.ResponseCookieBuilder> cookieCustomizer = (cookie) -> {
+        //     // cookie.secure(true);
+        //     cookie.secure(true);
+        //     cookie.httpOnly(false);
+        //     cookie.path("/");
+        //     cookie.sameSite("None");
+        // };
+        // CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        // cookieCsrfTokenRepository.setCookieCustomizer(cookieCustomizer);
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -49,9 +47,9 @@ public class ProjectSecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // CORSアクセスする元のドメイン名
-                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowedMethods(Collections.singletonList(CorsConfiguration.ALL));
                         config.setAllowCredentials(true);
-                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
                         config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION));
                         config.setMaxAge(3600L);
                         return config;
@@ -68,7 +66,7 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/admintest").hasRole("ADMIN")
                         .requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/usertest","/userposttest", "/post/**").hasRole("USER")
-                        .requestMatchers("/authtest","/customer/get", "/customer/me").authenticated() // 認証の必要なリクエスト
+                        .requestMatchers("/authtest","/customer/get","/customer/me").authenticated() // 認証の必要なリクエスト
                         .requestMatchers("/normaltest","/customer/register").permitAll()) // 認証の必要無いリクエスト
                 // .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
