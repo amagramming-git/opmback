@@ -1,4 +1,4 @@
-package com.openmemo.opmback.entity.post.selectMine;
+package com.openmemo.opmback.entity.post.getMine;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

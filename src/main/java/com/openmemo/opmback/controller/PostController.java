@@ -12,25 +12,29 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openmemo.opmback.entity.common.MessageBody;
 import com.openmemo.opmback.entity.customer.CustomerDto;
 import com.openmemo.opmback.entity.post.PostDto;
 import com.openmemo.opmback.entity.post.PostResponce;
+import com.openmemo.opmback.entity.post.delete.PostDeleteRequest;
+import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponce;
+import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponseBody;
 import com.openmemo.opmback.entity.post.insert.PostInsertRequest;
 import com.openmemo.opmback.entity.post.insert.PostInsertResponce;
-import com.openmemo.opmback.entity.post.selectMine.PostSelectMineRequest;
-import com.openmemo.opmback.entity.post.selectMine.PostSelectMineResponce;
-import com.openmemo.opmback.entity.post.selectMine.PostSelectMineResponseBody;
+import com.openmemo.opmback.entity.post.select.PostSelectResponce;
+import com.openmemo.opmback.entity.post.select.PostSelectResponseBody;
+import com.openmemo.opmback.entity.post.update.PostUpdateRequest;
 import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.service.PostService;
 import com.openmemo.opmback.util.ConstantUtil;
@@ -39,7 +43,7 @@ import com.openmemo.opmback.util.ConstantUtil;
 @RequestMapping(path = "post", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OldPostController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
     @Autowired
     private PostService postService;
@@ -48,13 +52,14 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/getmine")
-    public ResponseEntity<Object> getmine(Authentication authentication) {
+    public ResponseEntity<Object> getMine(Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             List<PostDto> resultPostList = new ArrayList<PostDto>();
             Integer customerId = getCurrentCustomerId(authentication);
 
             // ここにバリデーションやチェックがあればmessagesに加える
+
             if (messages.size() == 0) {
                 resultPostList = postService.selectMine(customerId);
             }
@@ -75,11 +80,38 @@ public class PostController {
     }
 
     @CrossOrigin
-    @GetMapping("/select")
-    public ResponseEntity<Object> select(@RequestParam("aaa") String aaa,Authentication authentication) {
-        List<MessageBody> messages = new ArrayList<MessageBody>();
-        PostSelectMineResponce res = new PostSelectMineResponce();
-        return getResponseEntity(messages, res, HttpStatus.OK);
+    @GetMapping("/select/{id}")
+    public ResponseEntity<Object> select(@PathVariable Integer id, Authentication authentication) {
+        try {
+            // 前処理
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            Integer customerId = getCurrentCustomerId(authentication);
+
+            // ここにバリデーションやチェックがあればmessagesに加える
+
+            PostDto result = new PostDto();
+            if (messages.size() == 0) {
+                result = postService.select(id);
+                if(result.getCustomerid() != customerId){
+                    MessageBody message = new MessageBody();
+                    message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_DIFFERENT_USER);
+                    messages.add(message);
+                }
+            }
+
+            PostSelectResponce res = new PostSelectResponce();
+            PostSelectResponseBody body = new PostSelectResponseBody();
+            body.setPost(result);
+            res.setBody(body);
+
+            if (messages.size() != 0) {
+                return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
+            } else {
+                return getResponseEntity(messages, res, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return responseError(e);
+        }
     }
 
     @CrossOrigin
@@ -94,7 +126,6 @@ public class PostController {
             int insertCount = 0;
             if (messages.size() == 0) {
                 insertCount = postService.insert(req, customerId);
-                
             }
 
             // 後処理
@@ -103,6 +134,49 @@ public class PostController {
             return getResponseEntity(messages, res, HttpStatus.OK);
         } catch (Exception e) {
             // エラー処理
+            return responseError(e);
+        }
+    }
+
+
+    @CrossOrigin
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> update(@RequestBody PostUpdateRequest req, @PathVariable Integer id,
+        Authentication authentication) {
+        try {
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            Integer customerId = getCurrentCustomerId(authentication);
+
+            int updateCount = 0;
+            // ここにバリデーションやチェックがあればmessagesに加える
+            if (messages.size() == 0) {
+                updateCount = postService.update(customerId, id, req);
+            }
+            PostInsertResponce res = new PostInsertResponce();
+            res.setInsertCount(updateCount);
+            return getResponseEntity(messages, res, HttpStatus.OK);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@RequestBody PostDeleteRequest req, @PathVariable Integer id,
+        Authentication authentication) {
+        try {
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            Integer customerId = getCurrentCustomerId(authentication);
+            int deleteCount = 0;
+
+            // ここにバリデーションやチェックがあればmessagesに加える
+            if (messages.size() == 0) {
+                deleteCount = postService.delete(customerId,id);
+            }
+            PostInsertResponce res = new PostInsertResponce();
+            res.setInsertCount(deleteCount);
+            return getResponseEntity(messages, res, HttpStatus.OK);
+        } catch (Exception e) {
             return responseError(e);
         }
     }
@@ -149,23 +223,4 @@ public class PostController {
         }
         return customerId;
     }
-
-
-    // @GetMapping("/normaltest")
-    // @ResponseBody
-    // public String normaltest() {
-    //     return "normaltest";
-    // }
-
-    // @GetMapping("/authtest")
-    // @ResponseBody
-    // public String authtest() {
-    //     return "authtest";
-    // }
-
-    // @GetMapping("/usertest")
-    // @ResponseBody
-    // public String usertest() {
-    //     return "usertest";
-    // }
 }

@@ -44,15 +44,16 @@ public class PostService {
         return insertCount;
     }
 
-    public int update(int id, PostUpdateRequest req) {
+    public int update(int customerid, int id, PostUpdateRequest req) {
         Post post = new Post();
         post.setId(id);
+        post.setCustomerid(customerid);
         post.setContent(req.getContent());
         int updateCount = postMapper.updateByPrimaryKeyCustom(post);
         return updateCount;
     }
 
-    public int delete(int id) {
+    public int delete(int customerId,int id) {
         int deleteCount = postMapper.deleteByPrimaryKey(id);
         return deleteCount;
     }
