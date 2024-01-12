@@ -66,7 +66,7 @@ public class PostController {
 
             PostSelectMineResponce res = new PostSelectMineResponce();
             PostSelectMineResponseBody body = new PostSelectMineResponseBody();
-            body.setPostList(resultPostList);
+            body.setPosts(resultPostList);
             res.setBody(body);
 
             if (messages.size() != 0) {
@@ -186,14 +186,14 @@ public class PostController {
             HttpStatus status) {
         if (messages.size() != 0) {
             res.setResult(ConstantUtil.API_RESULT_ERROR);
-            res.setMessage(messages);
+            res.setMessages(messages);
             return new ResponseEntity<Object>(res, new HttpHeaders(), status);
         } else {
             MessageBody messageBody = new MessageBody();
             res.setResult(ConstantUtil.API_RESULT_SUCCESS);
             messageBody.setMessage(ConstantUtil.API_RESULT_SUCCESS_MESSAGE);
             messages.add(messageBody);
-            res.setMessage(messages);
+            res.setMessages(messages);
             return new ResponseEntity<Object>(res, new HttpHeaders(), status);
         }
     }

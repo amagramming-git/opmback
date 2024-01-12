@@ -17,6 +17,6 @@ public class ApiResponse {
     protected String result;
 
     // メッセージ
-    @JsonProperty("message")
-    protected List<MessageBody> message;
+    @JsonProperty("messages")
+    protected List<MessageBody> messages;
 }

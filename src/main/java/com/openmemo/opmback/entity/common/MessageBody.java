@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MessageBody {
-    @JsonProperty("item")
-    private String item;
     @JsonProperty("message")
     private String message;
 }

@@ -289,7 +289,7 @@
   </insert>
   <update id="updateByPrimaryKeyCustom" parameterType="com.openmemo.opmback.mapper.post.Post">
     update post
-    set content = #{content,jdbcType=VARCHAR},
-    where id = #{id,jdbcType=INTEGER}
+    set content = #{content,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER} and customerId = #{customerid,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -163,14 +163,14 @@ public class CustomerController {
             HttpStatus status) {
         if (messages.size() != 0) {
             res.setResult(ConstantUtil.API_RESULT_ERROR);
-            res.setMessage(messages);
+            res.setMessages(messages);
             return new ResponseEntity<Object>(res, new HttpHeaders(), status);
         } else {
             MessageBody messageBody = new MessageBody();
             res.setResult(ConstantUtil.API_RESULT_SUCCESS);
             messageBody.setMessage(ConstantUtil.API_RESULT_SUCCESS_MESSAGE);
             messages.add(messageBody);
-            res.setMessage(messages);
+            res.setMessages(messages);
             return new ResponseEntity<Object>(res, new HttpHeaders(), status);
         }
     }

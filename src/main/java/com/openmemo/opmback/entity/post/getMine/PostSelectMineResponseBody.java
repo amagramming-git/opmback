@@ -13,6 +13,6 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostSelectMineResponseBody {
-    @JsonProperty("post_list")
-    private List<PostDto> postList;
+    @JsonProperty("posts")
+    private List<PostDto> posts;
 }
