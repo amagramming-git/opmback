@@ -32,8 +32,10 @@ import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponce;
 import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponseBody;
 import com.openmemo.opmback.entity.post.insert.PostInsertRequest;
 import com.openmemo.opmback.entity.post.insert.PostInsertResponce;
-import com.openmemo.opmback.entity.post.select.PostSelectResponce;
-import com.openmemo.opmback.entity.post.select.PostSelectResponseBody;
+import com.openmemo.opmback.entity.post.selectByPrimaryKey.PostSelectResponce;
+import com.openmemo.opmback.entity.post.selectByPrimaryKey.PostSelectResponseBody;
+import com.openmemo.opmback.entity.post.selectPartialMatch.PostSelectPartialMatchResponce;
+import com.openmemo.opmback.entity.post.selectPartialMatch.PostSelectPartialMatchResponceBody;
 import com.openmemo.opmback.entity.post.update.PostUpdateRequest;
 import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.service.PostService;
@@ -112,6 +114,34 @@ public class PostController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping("/selectPartialMatch")
+    public ResponseEntity<Object> selectPartialMatch(@RequestParam("likeString")String likeString, Authentication authentication) {
+        try {
+            // 前処理
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            List<PostDto> resultPostList = new ArrayList<PostDto>();
+            Integer customerId = getCurrentCustomerId(authentication);
+
+            if (messages.size() == 0) {
+                resultPostList = postService.selectPartialMatch(customerId,likeString);
+            }
+
+            PostSelectPartialMatchResponce res = new PostSelectPartialMatchResponce();
+            PostSelectPartialMatchResponceBody body = new PostSelectPartialMatchResponceBody();
+            body.setPosts(resultPostList);
+            res.setBody(body);
+            
+            if (messages.size() != 0) {
+                return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
+            } else {
+                return getResponseEntity(messages, res, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+    
     @CrossOrigin
     @PostMapping("/insert")
     public ResponseEntity<Object> insert(@RequestBody PostInsertRequest req, Authentication authentication) {

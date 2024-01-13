@@ -1,4 +1,6 @@
-package com.openmemo.opmback.entity.post.select;
+package com.openmemo.opmback.entity.post.selectPartialMatch;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostSelectResponseBody {
-    @JsonProperty("post")
-    private PostDto post;
+public class PostSelectPartialMatchResponceBody {
+    @JsonProperty("posts")
+    private List<PostDto> posts;
 }

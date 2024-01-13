@@ -36,6 +36,15 @@ public class PostService {
         return dtoList.get(0);
     }
 
+    public List<PostDto> selectPartialMatch(Integer customerId,String likeString) {
+        PostExample postExample = new PostExample();
+        postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        List<Post> postList = postMapper.selectByExample(postExample);
+        List<PostDto> postDtoList = setPostDtoList(postList);
+        return postDtoList;
+    }
+
     public int insert(PostInsertRequest req, Integer customerId) {
         Post post = new Post();
         post.setCustomerid(customerId);
