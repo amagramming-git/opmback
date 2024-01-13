@@ -80,8 +80,8 @@ public class PostController {
     }
 
     @CrossOrigin
-    @GetMapping("/select/{id}")
-    public ResponseEntity<Object> select(@PathVariable Integer id, Authentication authentication) {
+    @GetMapping("/selectbyprimarykey/{id}")
+    public ResponseEntity<Object> selectByPrimaryKey(@PathVariable Integer id, Authentication authentication) {
         try {
             // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
