@@ -87,8 +87,6 @@ public class PostController {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             Integer customerId = getCurrentCustomerId(authentication);
 
-            // ここにバリデーションやチェックがあればmessagesに加える
-
             PostDto result = new PostDto();
             if (messages.size() == 0) {
                 result = postService.select(id);
@@ -169,10 +167,20 @@ public class PostController {
             Integer customerId = getCurrentCustomerId(authentication);
             int deleteCount = 0;
 
-            // ここにバリデーションやチェックがあればmessagesに加える
+            PostDto result = new PostDto();
             if (messages.size() == 0) {
-                deleteCount = postService.delete(customerId,id);
+                result = postService.select(id);
+                if(result.getCustomerid() != customerId){
+                    MessageBody message = new MessageBody();
+                    message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_DIFFERENT_USER);
+                    messages.add(message);
+                }
             }
+
+            if (messages.size() == 0) {
+                deleteCount = postService.delete(id);
+            }
+
             PostInsertResponce res = new PostInsertResponce();
             res.setInsertCount(deleteCount);
             return getResponseEntity(messages, res, HttpStatus.OK);

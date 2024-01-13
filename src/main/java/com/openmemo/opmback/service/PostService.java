@@ -53,7 +53,7 @@ public class PostService {
         return updateCount;
     }
 
-    public int delete(int customerId,int id) {
+    public int delete(int id) {
         int deleteCount = postMapper.deleteByPrimaryKey(id);
         return deleteCount;
     }
