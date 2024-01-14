@@ -15,4 +15,6 @@ import lombok.Setter;
 public class PostSelectMineResponseBody {
     @JsonProperty("posts")
     private List<PostDto> posts;
+    @JsonProperty("count")
+    private Long count;
 }

@@ -97,4 +97,6 @@ public interface PostMapper {
     int updateByPrimaryKeyCustom(Post row);
 
     int insertCustom(Post row);
+
+    List<Post> selectByExampleCustom(PostExample example);
 }

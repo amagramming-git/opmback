@@ -11,6 +11,7 @@ import com.openmemo.opmback.entity.post.insert.PostInsertRequest;
 import com.openmemo.opmback.entity.post.update.PostUpdateRequest;
 import com.openmemo.opmback.mapper.post.Post;
 import com.openmemo.opmback.mapper.post.PostExample;
+import com.openmemo.opmback.mapper.post.PostExampleCustom;
 import com.openmemo.opmback.mapper.post.PostMapper;
 
 @Service
@@ -26,6 +27,23 @@ public class PostService {
         List<Post> postList = postMapper.selectByExample(postExample);
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;
+    }
+    public List<PostDto> selectMinePaging(Integer customerId,Integer limit,Integer offset) {
+        PostExampleCustom postExample = new PostExampleCustom();
+        postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId);
+        postExample.setLimit(limit);
+        postExample.setOffset(offset);
+        List<Post> postList = postMapper.selectByExampleCustom(postExample);
+        List<PostDto> postDtoList = setPostDtoList(postList);
+        return postDtoList;
+    }
+    public long countMine(Integer customerId) {
+        PostExampleCustom postExample = new PostExampleCustom();
+        postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId);
+        long count = postMapper.countByExample(postExample);
+        return count;
     }
 
     public PostDto select(Integer id) {
@@ -45,6 +63,24 @@ public class PostService {
         return postDtoList;
     }
 
+    public List<PostDto> selectPartialMatchPaging(Integer customerId,String likeString,Integer limit,Integer offset) {
+        PostExampleCustom postExample = new PostExampleCustom();
+        postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        postExample.setLimit(limit);
+        postExample.setOffset(offset);
+        List<Post> postList = postMapper.selectByExampleCustom(postExample);
+        List<PostDto> postDtoList = setPostDtoList(postList);
+        return postDtoList;
+    }
+    public long countPartialMatch(Integer customerId,String likeString) {
+        PostExampleCustom postExample = new PostExampleCustom();
+        postExample.setOrderByClause("id");
+        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        long count = postMapper.countByExample(postExample);
+        return count;
+    }
+    
     public int insert(PostInsertRequest req, Integer customerId) {
         Post post = new Post();
         post.setCustomerid(customerId);

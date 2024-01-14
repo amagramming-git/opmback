@@ -15,4 +15,6 @@ import lombok.Setter;
 public class PostSelectPartialMatchResponceBody {
     @JsonProperty("posts")
     private List<PostDto> posts;
+    @JsonProperty("count")
+    private long count;
 }

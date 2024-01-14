@@ -82,6 +82,39 @@ public class PostController {
     }
 
     @CrossOrigin
+    @GetMapping("/getminepaging")
+    public ResponseEntity<Object> getMinePaging(@RequestParam("limit")String limit,@RequestParam("offset")String offset,
+        Authentication authentication) {
+        try {
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            List<PostDto> resultPostList = new ArrayList<PostDto>();
+            long count = 0;
+            Integer customerId = getCurrentCustomerId(authentication);
+
+            // ここにバリデーションやチェックがあればmessagesに加える
+
+            if (messages.size() == 0) {
+                count = postService.countMine(customerId);
+                resultPostList = postService.selectMinePaging(customerId,Integer.parseInt(limit),Integer.parseInt(offset));
+            }
+
+            PostSelectMineResponce res = new PostSelectMineResponce();
+            PostSelectMineResponseBody body = new PostSelectMineResponseBody();
+            body.setPosts(resultPostList);
+            body.setCount(count);
+            res.setBody(body);
+
+            if (messages.size() != 0) {
+                return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
+            } else {
+                return getResponseEntity(messages, res, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @CrossOrigin
     @GetMapping("/selectbyprimarykey/{id}")
     public ResponseEntity<Object> selectByPrimaryKey(@PathVariable Integer id, Authentication authentication) {
         try {
@@ -131,7 +164,7 @@ public class PostController {
             PostSelectPartialMatchResponceBody body = new PostSelectPartialMatchResponceBody();
             body.setPosts(resultPostList);
             res.setBody(body);
-            
+
             if (messages.size() != 0) {
                 return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
             } else {
@@ -141,7 +174,38 @@ public class PostController {
             return responseError(e);
         }
     }
-    
+
+    @CrossOrigin
+    @GetMapping("/selectpartialmatchpaging")
+    public ResponseEntity<Object> selectPartialMatchPaging(@RequestParam("likeString")String likeString,
+        @RequestParam("limit")String limit,@RequestParam("offset")String offset, Authentication authentication) {
+        try {
+            // 前処理
+            List<MessageBody> messages = new ArrayList<MessageBody>();
+            List<PostDto> resultPostList = new ArrayList<PostDto>();
+            Integer customerId = getCurrentCustomerId(authentication);
+            long count = 0;
+
+            if (messages.size() == 0) {
+                count = postService.countPartialMatch(customerId,likeString);
+                resultPostList = postService.selectPartialMatchPaging(customerId,likeString,Integer.parseInt(limit),Integer.parseInt(offset));
+            }
+
+            PostSelectPartialMatchResponce res = new PostSelectPartialMatchResponce();
+            PostSelectPartialMatchResponceBody body = new PostSelectPartialMatchResponceBody();
+            body.setPosts(resultPostList);
+            body.setCount(count);
+            res.setBody(body);
+
+            if (messages.size() != 0) {
+                return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
+            } else {
+                return getResponseEntity(messages, res, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
     @CrossOrigin
     @PostMapping("/insert")
     public ResponseEntity<Object> insert(@RequestBody PostInsertRequest req, Authentication authentication) {
