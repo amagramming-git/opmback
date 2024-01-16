@@ -22,7 +22,7 @@ public class AuthorityService {
     public int insertRoleUser(int customerId) {
         Authority authority = new Authority();
         authority.setCustomerId(customerId);
-        authority.setRolename("USER_ROLE");
+        authority.setRolename("ROLE_USER");
         return authorityMapper.insertCustom(authority);
     }
 
