@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostInsertResponce extends PostResponce {
-    @JsonProperty("insertCount")
-    private Integer insertCount;
+    @JsonProperty("body")
+    private PostInsertResponceBody body;
 }

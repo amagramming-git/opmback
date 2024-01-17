@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerRegisterResponce extends CustomerResponce {
-    @JsonProperty("registerCount")
-    private Integer registerCount;
+    @JsonProperty("body")
+    private CustomerRegisterResponceBody body;
 }

@@ -28,15 +28,20 @@ import com.openmemo.opmback.entity.customer.CustomerDto;
 import com.openmemo.opmback.entity.post.PostDto;
 import com.openmemo.opmback.entity.post.PostResponce;
 import com.openmemo.opmback.entity.post.delete.PostDeleteRequest;
+import com.openmemo.opmback.entity.post.delete.PostDeleteResponce;
+import com.openmemo.opmback.entity.post.delete.PostDeleteResponceBody;
 import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponce;
 import com.openmemo.opmback.entity.post.getMine.PostSelectMineResponseBody;
 import com.openmemo.opmback.entity.post.insert.PostInsertRequest;
 import com.openmemo.opmback.entity.post.insert.PostInsertResponce;
+import com.openmemo.opmback.entity.post.insert.PostInsertResponceBody;
 import com.openmemo.opmback.entity.post.selectByPrimaryKey.PostSelectResponce;
 import com.openmemo.opmback.entity.post.selectByPrimaryKey.PostSelectResponseBody;
 import com.openmemo.opmback.entity.post.selectPartialMatch.PostSelectPartialMatchResponce;
 import com.openmemo.opmback.entity.post.selectPartialMatch.PostSelectPartialMatchResponceBody;
 import com.openmemo.opmback.entity.post.update.PostUpdateRequest;
+import com.openmemo.opmback.entity.post.update.PostUpdateResponce;
+import com.openmemo.opmback.entity.post.update.PostUpdateResponceBody;
 import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.service.PostService;
 import com.openmemo.opmback.util.ConstantUtil;
@@ -148,7 +153,7 @@ public class PostController {
     }
 
     @CrossOrigin
-    @GetMapping("/selectPartialMatch")
+    @GetMapping("/selectpartialmatch")
     public ResponseEntity<Object> selectPartialMatch(@RequestParam("likeString")String likeString, Authentication authentication) {
         try {
             // 前処理
@@ -222,7 +227,9 @@ public class PostController {
 
             // 後処理
             PostInsertResponce res = new PostInsertResponce();
-            res.setInsertCount(insertCount);
+            PostInsertResponceBody body = new PostInsertResponceBody();
+            body.setInsertCount(insertCount);
+            res.setBody(body);
             return getResponseEntity(messages, res, HttpStatus.OK);
         } catch (Exception e) {
             // エラー処理
@@ -244,8 +251,12 @@ public class PostController {
             if (messages.size() == 0) {
                 updateCount = postService.update(customerId, id, req);
             }
-            PostInsertResponce res = new PostInsertResponce();
-            res.setInsertCount(updateCount);
+            
+            PostUpdateResponce res = new PostUpdateResponce();
+            PostUpdateResponceBody body = new PostUpdateResponceBody();
+            body.setUpdateCount(updateCount);
+            res.setBody(body);
+
             return getResponseEntity(messages, res, HttpStatus.OK);
         } catch (Exception e) {
             return responseError(e);
@@ -275,8 +286,10 @@ public class PostController {
                 deleteCount = postService.delete(id);
             }
 
-            PostInsertResponce res = new PostInsertResponce();
-            res.setInsertCount(deleteCount);
+            PostDeleteResponce res = new PostDeleteResponce();
+            PostDeleteResponceBody body = new PostDeleteResponceBody();
+            body.setDeleteCount(deleteCount);
+            res.setBody(body);
             return getResponseEntity(messages, res, HttpStatus.OK);
         } catch (Exception e) {
             return responseError(e);

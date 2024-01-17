@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostUpdateResponce extends PostResponce {
-    @JsonProperty("updateCount")
-    private Integer updateCount;
+    @JsonProperty("body")
+    private PostUpdateResponceBody body;
 }

@@ -24,8 +24,10 @@ import com.openmemo.opmback.entity.common.MessageBody;
 import com.openmemo.opmback.entity.customer.CustomerDto;
 import com.openmemo.opmback.entity.customer.CustomerResponce;
 import com.openmemo.opmback.entity.customer.get.CustomerGetResponce;
+import com.openmemo.opmback.entity.customer.get.CustomerGetResponceBody;
 import com.openmemo.opmback.entity.customer.register.CustomerRegisterRequest;
 import com.openmemo.opmback.entity.customer.register.CustomerRegisterResponce;
+import com.openmemo.opmback.entity.customer.register.CustomerRegisterResponceBody;
 import com.openmemo.opmback.mapper.customer.Customer;
 import com.openmemo.opmback.service.AuthorityService;
 import com.openmemo.opmback.service.CustomerService;
@@ -78,7 +80,9 @@ public class CustomerController {
             }
 
             CustomerRegisterResponce res = new CustomerRegisterResponce();
-            res.setRegisterCount(registerCount);
+            CustomerRegisterResponceBody body = new CustomerRegisterResponceBody();
+            body.setRegisterCount(registerCount);
+            res.setBody(body);
 
             if (messages.size() != 0) {
                 return getResponseEntity(messages, res, HttpStatus.BAD_REQUEST);
@@ -101,12 +105,14 @@ public class CustomerController {
             }
 
             CustomerGetResponce res = new CustomerGetResponce();
+            CustomerGetResponceBody body = new CustomerGetResponceBody();
             if (customerList.size() != 1) {
                 throw new BadCredentialsException("No user registered with this details!");
             } else {
-                res.setEmail(customerList.get(0).getEmail());
-                res.setUsername(customerList.get(0).getUsername());
-                res.setId(customerList.get(0).getId());
+                body.setEmail(customerList.get(0).getEmail());
+                body.setUsername(customerList.get(0).getUsername());
+                body.setId(customerList.get(0).getId());
+                res.setBody(body);
             }
 
             if (messages.size() != 0) {
@@ -130,12 +136,14 @@ public class CustomerController {
             }
 
             CustomerGetResponce res = new CustomerGetResponce();
+            CustomerGetResponceBody body = new CustomerGetResponceBody();
             if (customerList.size() != 1) {
                 throw new BadCredentialsException("No user registered with this details!");
             } else {
-                res.setEmail(customerList.get(0).getEmail());
-                res.setUsername(customerList.get(0).getUsername());
-                res.setId(customerList.get(0).getId());
+                body.setEmail(customerList.get(0).getEmail());
+                body.setUsername(customerList.get(0).getUsername());
+                body.setId(customerList.get(0).getId());
+                res.setBody(body);
             }
 
             if (messages.size() != 0) {
