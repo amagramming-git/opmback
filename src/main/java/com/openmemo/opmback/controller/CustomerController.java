@@ -34,7 +34,8 @@ import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.util.ConstantUtil;
 
 @RestController
-@RequestMapping(path = "customer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "customer", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
@@ -70,9 +71,11 @@ public class CustomerController {
             if (messages.size() == 0) {
                 registerCount = customerService.save(customer);
                 if (registerCount == 1) {
-                    authorityService.insertRoleUser(customerService.findByEmail(customer.getEmail()).get(0).getId());
+                    authorityService.insertRoleUser(
+                            customerService.findByEmail(customer.getEmail()).get(0).getId());
                 } else {
-                    LOGGER.error(ConstantUtil.API_RESULT_ERROR_MESSAGE, "Error when saving user role");
+                    LOGGER.error(ConstantUtil.API_RESULT_ERROR_MESSAGE,
+                            "Error when saving user role");
                     MessageBody message = new MessageBody();
                     message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE);
                     messages.add(message);
@@ -124,7 +127,7 @@ public class CustomerController {
             return responseError(e);
         }
     }
-    
+
     @GetMapping("me")
     public ResponseEntity<Object> me(Authentication authentication) {
         try {
@@ -164,11 +167,12 @@ public class CustomerController {
         messageBody.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE);
         messages.add(messageBody);
 
-        return getResponseEntity(messages, new CustomerResponce(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return getResponseEntity(messages, new CustomerResponce(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    protected ResponseEntity<Object> getResponseEntity(List<MessageBody> messages, CustomerResponce res,
-            HttpStatus status) {
+    protected ResponseEntity<Object> getResponseEntity(List<MessageBody> messages,
+            CustomerResponce res, HttpStatus status) {
         if (messages.size() != 0) {
             res.setResult(ConstantUtil.API_RESULT_ERROR);
             res.setMessages(messages);

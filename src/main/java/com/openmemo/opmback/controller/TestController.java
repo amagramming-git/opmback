@@ -25,7 +25,6 @@ public class TestController {
         return "usertest";
     }
 
-
     @PostMapping("/userposttest")
     @ResponseBody
     public String userposttest() {

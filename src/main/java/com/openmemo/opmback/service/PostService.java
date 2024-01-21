@@ -28,7 +28,8 @@ public class PostService {
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;
     }
-    public List<PostDto> selectMinePaging(Integer customerId,Integer limit,Integer offset) {
+
+    public List<PostDto> selectMinePaging(Integer customerId, Integer limit, Integer offset) {
         PostExampleCustom postExample = new PostExampleCustom();
         postExample.setOrderByClause("id");
         postExample.createCriteria().andCustomeridEqualTo(customerId);
@@ -38,6 +39,7 @@ public class PostService {
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;
     }
+
     public long countMine(Integer customerId) {
         PostExampleCustom postExample = new PostExampleCustom();
         postExample.setOrderByClause("id");
@@ -54,33 +56,38 @@ public class PostService {
         return dtoList.get(0);
     }
 
-    public List<PostDto> selectPartialMatch(Integer customerId,String likeString) {
+    public List<PostDto> selectPartialMatch(Integer customerId, String likeString) {
         PostExample postExample = new PostExample();
         postExample.setOrderByClause("id");
-        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        postExample.createCriteria().andCustomeridEqualTo(customerId)
+                .andContentLike("%" + likeString + "%");
         List<Post> postList = postMapper.selectByExample(postExample);
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;
     }
 
-    public List<PostDto> selectPartialMatchPaging(Integer customerId,String likeString,Integer limit,Integer offset) {
+    public List<PostDto> selectPartialMatchPaging(Integer customerId, String likeString,
+            Integer limit, Integer offset) {
         PostExampleCustom postExample = new PostExampleCustom();
         postExample.setOrderByClause("id");
-        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        postExample.createCriteria().andCustomeridEqualTo(customerId)
+                .andContentLike("%" + likeString + "%");
         postExample.setLimit(limit);
         postExample.setOffset(offset);
         List<Post> postList = postMapper.selectByExampleCustom(postExample);
         List<PostDto> postDtoList = setPostDtoList(postList);
         return postDtoList;
     }
-    public long countPartialMatch(Integer customerId,String likeString) {
+
+    public long countPartialMatch(Integer customerId, String likeString) {
         PostExampleCustom postExample = new PostExampleCustom();
         postExample.setOrderByClause("id");
-        postExample.createCriteria().andCustomeridEqualTo(customerId).andContentLike("%"+likeString+"%");
+        postExample.createCriteria().andCustomeridEqualTo(customerId)
+                .andContentLike("%" + likeString + "%");
         long count = postMapper.countByExample(postExample);
         return count;
     }
-    
+
     public int insert(PostInsertRequest req, Integer customerId) {
         Post post = new Post();
         post.setCustomerid(customerId);

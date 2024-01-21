@@ -47,7 +47,8 @@ import com.openmemo.opmback.service.PostService;
 import com.openmemo.opmback.util.ConstantUtil;
 
 @RestController
-@RequestMapping(path = "post", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "post", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
@@ -88,8 +89,8 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/getminepaging")
-    public ResponseEntity<Object> getMinePaging(@RequestParam("limit")String limit,@RequestParam("offset")String offset,
-        Authentication authentication) {
+    public ResponseEntity<Object> getMinePaging(@RequestParam("limit") String limit,
+            @RequestParam("offset") String offset, Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             List<PostDto> resultPostList = new ArrayList<PostDto>();
@@ -100,7 +101,8 @@ public class PostController {
 
             if (messages.size() == 0) {
                 count = postService.countMine(customerId);
-                resultPostList = postService.selectMinePaging(customerId,Integer.parseInt(limit),Integer.parseInt(offset));
+                resultPostList = postService.selectMinePaging(customerId, Integer.parseInt(limit),
+                        Integer.parseInt(offset));
             }
 
             PostSelectMineResponce res = new PostSelectMineResponce();
@@ -121,7 +123,8 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/selectbyprimarykey/{id}")
-    public ResponseEntity<Object> selectByPrimaryKey(@PathVariable Integer id, Authentication authentication) {
+    public ResponseEntity<Object> selectByPrimaryKey(@PathVariable Integer id,
+            Authentication authentication) {
         try {
             // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
@@ -130,7 +133,7 @@ public class PostController {
             PostDto result = new PostDto();
             if (messages.size() == 0) {
                 result = postService.select(id);
-                if(result.getCustomerid() != customerId){
+                if (result.getCustomerid() != customerId) {
                     MessageBody message = new MessageBody();
                     message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_DIFFERENT_USER);
                     messages.add(message);
@@ -154,7 +157,8 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/selectpartialmatch")
-    public ResponseEntity<Object> selectPartialMatch(@RequestParam("likeString")String likeString, Authentication authentication) {
+    public ResponseEntity<Object> selectPartialMatch(@RequestParam("likeString") String likeString,
+            Authentication authentication) {
         try {
             // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
@@ -162,7 +166,7 @@ public class PostController {
             Integer customerId = getCurrentCustomerId(authentication);
 
             if (messages.size() == 0) {
-                resultPostList = postService.selectPartialMatch(customerId,likeString);
+                resultPostList = postService.selectPartialMatch(customerId, likeString);
             }
 
             PostSelectPartialMatchResponce res = new PostSelectPartialMatchResponce();
@@ -182,8 +186,9 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/selectpartialmatchpaging")
-    public ResponseEntity<Object> selectPartialMatchPaging(@RequestParam("likeString")String likeString,
-        @RequestParam("limit")String limit,@RequestParam("offset")String offset, Authentication authentication) {
+    public ResponseEntity<Object> selectPartialMatchPaging(
+            @RequestParam("likeString") String likeString, @RequestParam("limit") String limit,
+            @RequestParam("offset") String offset, Authentication authentication) {
         try {
             // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
@@ -192,8 +197,9 @@ public class PostController {
             long count = 0;
 
             if (messages.size() == 0) {
-                count = postService.countPartialMatch(customerId,likeString);
-                resultPostList = postService.selectPartialMatchPaging(customerId,likeString,Integer.parseInt(limit),Integer.parseInt(offset));
+                count = postService.countPartialMatch(customerId, likeString);
+                resultPostList = postService.selectPartialMatchPaging(customerId, likeString,
+                        Integer.parseInt(limit), Integer.parseInt(offset));
             }
 
             PostSelectPartialMatchResponce res = new PostSelectPartialMatchResponce();
@@ -211,9 +217,11 @@ public class PostController {
             return responseError(e);
         }
     }
+
     @CrossOrigin
     @PostMapping("/insert")
-    public ResponseEntity<Object> insert(@RequestBody PostInsertRequest req, Authentication authentication) {
+    public ResponseEntity<Object> insert(@RequestBody PostInsertRequest req,
+            Authentication authentication) {
         try {
             // 前処理
             List<MessageBody> messages = new ArrayList<MessageBody>();
@@ -240,8 +248,8 @@ public class PostController {
 
     @CrossOrigin
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@RequestBody PostUpdateRequest req, @PathVariable Integer id,
-        Authentication authentication) {
+    public ResponseEntity<Object> update(@RequestBody PostUpdateRequest req,
+            @PathVariable Integer id, Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             Integer customerId = getCurrentCustomerId(authentication);
@@ -251,7 +259,7 @@ public class PostController {
             if (messages.size() == 0) {
                 updateCount = postService.update(customerId, id, req);
             }
-            
+
             PostUpdateResponce res = new PostUpdateResponce();
             PostUpdateResponceBody body = new PostUpdateResponceBody();
             body.setUpdateCount(updateCount);
@@ -265,8 +273,8 @@ public class PostController {
 
     @CrossOrigin
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@RequestBody PostDeleteRequest req, @PathVariable Integer id,
-        Authentication authentication) {
+    public ResponseEntity<Object> delete(@RequestBody PostDeleteRequest req,
+            @PathVariable Integer id, Authentication authentication) {
         try {
             List<MessageBody> messages = new ArrayList<MessageBody>();
             Integer customerId = getCurrentCustomerId(authentication);
@@ -275,7 +283,7 @@ public class PostController {
             PostDto result = new PostDto();
             if (messages.size() == 0) {
                 result = postService.select(id);
-                if(result.getCustomerid() != customerId){
+                if (result.getCustomerid() != customerId) {
                     MessageBody message = new MessageBody();
                     message.setMessage(ConstantUtil.API_RESULT_ERROR_MESSAGE_DIFFERENT_USER);
                     messages.add(message);

@@ -29,7 +29,8 @@ public class ProjectAuthenticationProvider implements AuthenticationProvider {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
         List<CustomerDto> customerList = customerService.findByEmail(email);

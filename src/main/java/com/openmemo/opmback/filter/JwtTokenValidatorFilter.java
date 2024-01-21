@@ -25,21 +25,18 @@ import java.nio.charset.StandardCharsets;
 public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (null != authorizationHeader){
+        if (null != authorizationHeader) {
             String authorizationType = authorizationHeader.split(" ")[0];
             String token = authorizationHeader.split(" ")[1];
             if (authorizationType.equals("Bearer") && (null != token)) {
                 try {
                     SecretKey key = Keys.hmacShaKeyFor(
                             ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-                    Claims claims = Jwts.parserBuilder()
-                            .setSigningKey(key)
-                            .build()
-                            .parseClaimsJws(token)
-                            .getBody();
+                    Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
+                            .parseClaimsJws(token).getBody();
                     String username = String.valueOf(claims.get("username"));
                     String authorities = (String) claims.get("authorities");
                     Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
@@ -48,7 +45,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
                 } catch (Exception e) {
                     throw new BadCredentialsException("Invalid Token received!");
                 }
-            }else{
+            } else {
                 throw new BadCredentialsException("Not Bearer Token!");
             }
         }
