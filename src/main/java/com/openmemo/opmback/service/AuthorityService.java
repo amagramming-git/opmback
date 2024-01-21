@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openmemo.opmback.entity.authority.AuthorityDto;
-import com.openmemo.opmback.entity.customer.CustomerDto;
 import com.openmemo.opmback.mapper.authority.Authority;
 import com.openmemo.opmback.mapper.authority.AuthorityExample;
 import com.openmemo.opmback.mapper.authority.AuthorityMapper;
-import com.openmemo.opmback.mapper.customer.Customer;
 
 @Service
 public class AuthorityService {

@@ -33,7 +33,7 @@ public class ProjectSecurityConfig {
                                     HttpServletRequest request) {
                                 CorsConfiguration config = new CorsConfiguration();
                                 config.setAllowedOrigins(
-                                        Collections.singletonList("http://localhost:3000")); // CORSアクセスする元のドメイン名
+                                        Collections.singletonList("http://localhost:3000"));
                                 config.setAllowedMethods(
                                         Collections.singletonList(CorsConfiguration.ALL));
                                 config.setAllowCredentials(true);
