@@ -47,7 +47,7 @@ import com.openmemo.opmback.service.PostService;
 import com.openmemo.opmback.util.ConstantUtil;
 
 @RestController
-@RequestMapping(path = "post", consumes = MediaType.APPLICATION_JSON_VALUE,
+@RequestMapping(path = "api/post", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 

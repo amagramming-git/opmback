@@ -6,14 +6,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.openmemo.opmback.util.ConstantSecurity;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
@@ -29,8 +26,8 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (null != authentication) {
-            SecretKey key =
-                    Keys.hmacShaKeyFor(ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
+            String jwtKey = System.getenv("JWT_KEY");
+            SecretKey key = Keys.hmacShaKeyFor(jwtKey.getBytes(StandardCharsets.UTF_8));
             String jwt = Jwts.builder().setIssuer("OpenMemo").setSubject("JWT Token")
                     .claim("username", authentication.getName())
                     .claim("authorities", populateAuthorities(authentication.getAuthorities()))
@@ -45,7 +42,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getServletPath().equals("/customer/get");
+        return !request.getServletPath().equals("/api/customer/get");
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> collection) {

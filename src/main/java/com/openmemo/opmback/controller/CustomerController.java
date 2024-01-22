@@ -34,7 +34,7 @@ import com.openmemo.opmback.service.CustomerService;
 import com.openmemo.opmback.util.ConstantUtil;
 
 @RestController
-@RequestMapping(path = "customer", consumes = MediaType.APPLICATION_JSON_VALUE,
+@RequestMapping(path = "api/customer", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerController {
 

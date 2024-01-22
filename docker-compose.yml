@@ -4,6 +4,7 @@ services:
     container_name: java
     env_file:
       - ./mysql/db.env # mysqlと同じものを指定
+      - ./dockerfiles/localdevelop/.env
     tty: true
     working_dir: /opmback #コンテナ内のワーキングディレクトリ
     volumes:

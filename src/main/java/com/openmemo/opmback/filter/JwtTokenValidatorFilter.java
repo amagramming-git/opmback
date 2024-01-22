@@ -7,7 +7,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.openmemo.opmback.util.ConstantSecurity;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
@@ -33,8 +30,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
             String token = authorizationHeader.split(" ")[1];
             if (authorizationType.equals("Bearer") && (null != token)) {
                 try {
-                    SecretKey key = Keys.hmacShaKeyFor(
-                            ConstantSecurity.JWT_KEY.getBytes(StandardCharsets.UTF_8));
+                    String jwtKey = System.getenv("JWT_KEY");
+                    SecretKey key = Keys.hmacShaKeyFor(jwtKey.getBytes(StandardCharsets.UTF_8));
                     Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
                             .parseClaimsJws(token).getBody();
                     String username = String.valueOf(claims.get("username"));
@@ -54,7 +51,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/customer/get");
+        return request.getServletPath().equals("/api/customer/get");
     }
 
 }

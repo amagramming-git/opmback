@@ -3,6 +3,7 @@ package com.openmemo.opmback.config;
 import java.util.Collections;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,9 @@ import com.openmemo.opmback.filter.JwtTokenValidatorFilter;
 
 @Configuration
 public class ProjectSecurityConfig {
+    @Value("${allowed.origin.opmfront}")
+    private String ALLOWED_ORIGIN_OPMFRONT;
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(
@@ -33,7 +37,7 @@ public class ProjectSecurityConfig {
                                     HttpServletRequest request) {
                                 CorsConfiguration config = new CorsConfiguration();
                                 config.setAllowedOrigins(
-                                        Collections.singletonList("http://localhost:3000"));
+                                        Collections.singletonList(ALLOWED_ORIGIN_OPMFRONT));
                                 config.setAllowedMethods(
                                         Collections.singletonList(CorsConfiguration.ALL));
                                 config.setAllowCredentials(true);
@@ -48,11 +52,13 @@ public class ProjectSecurityConfig {
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/admintest")
-                        .hasRole("ADMIN").requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/usertest", "/userposttest", "/post/**").hasRole("USER")
-                        .requestMatchers("/authtest", "/customer/get", "/customer/me")
+                        .hasRole("ADMIN") // ADMIN
+                        .requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")// ADMINもしくはUSER
+                        .requestMatchers("/usertest", "/userposttest", "/api/post/**")
+                        .hasRole("USER") // USER
+                        .requestMatchers("/authtest", "/api/customer/get", "/api/customer/me")
                         .authenticated() // 認証の必要なリクエスト
-                        .requestMatchers("/normaltest", "/customer/register").permitAll()) // 認証の必要無いリクエスト
+                        .requestMatchers("/normaltest", "/api/customer/register").permitAll()) // 認証の必要無いリクエスト
                 .anonymous((anonymous) -> anonymous.disable()).httpBasic(Customizer.withDefaults());
         return http.build();
     }

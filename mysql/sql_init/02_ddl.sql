@@ -22,9 +22,16 @@ CREATE TABLE `openmemo`.`authority` (
 );
 
 
-
 -- passwordはPassw0rdのハッシュ値
 use openmemo;
+
+INSERT INTO 
+  `customer` (`email`,`username`,`password`)
+  VALUES ('admin@example.com', 'example', '$2a$10$CtK1sZfJeggT1wRuiBgfbu6.r8MbA4v8bmNPhNqov.7VLnyTpBIYe');
+
+INSERT INTO 
+  `customer` (`email`,`username`,`password`)
+  VALUES ('customer@example.com', 'example', '$2a$10$CtK1sZfJeggT1wRuiBgfbu6.r8MbA4v8bmNPhNqov.7VLnyTpBIYe');
 
 INSERT INTO 
   `authority` (`customer_id`,`rolename`)
@@ -37,15 +44,6 @@ INSERT INTO
 INSERT INTO 
   `authority` (`customer_id`,`rolename`)
   VALUES (2, 'ROLE_USER');
-
-INSERT INTO 
-  `customer` (`email`,`username`,`password`)
-  VALUES ('admin@example.com', 'example', '$2a$10$CtK1sZfJeggT1wRuiBgfbu6.r8MbA4v8bmNPhNqov.7VLnyTpBIYe');
-
-INSERT INTO 
-  `customer` (`email`,`username`,`password`)
-  VALUES ('customer@example.com', 'example', '$2a$10$CtK1sZfJeggT1wRuiBgfbu6.r8MbA4v8bmNPhNqov.7VLnyTpBIYe');
-
 
 INSERT INTO 
   `post` (`customerId`,`content`)
