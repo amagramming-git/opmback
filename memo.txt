@@ -3,3 +3,10 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.1.5
 
 ローカルの環境構築について大変参考になった記事。
 https://qiita.com/ichi-ken/items/e9b157c5ab1fab364c3e
+
+構築メモ
+targetの削除、MAVENのinstallを実行
+docker build --tag=kambe/opmback:1.0 .
+ローカルで動作確認
+MySQLの起動: docker-compose up -d mysql
+上記のbuildしたコンテナ(SpringBoot)の起動: docker run --detach -p 8080:8080 --network opmback_opm_network --env-file ./mysql/db.env --env-file ./dockerfiles/localdevelop/.env --name opmback kambe/opmback:1.0
