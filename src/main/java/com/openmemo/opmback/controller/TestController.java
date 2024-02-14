@@ -7,37 +7,37 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class TestController {
-    @GetMapping("/normaltest")
+    @GetMapping("/api/normaltest")
     @ResponseBody
     public String normaltest() {
         return "normaltest";
     }
 
-    @GetMapping("/authtest")
+    @GetMapping("/api/authtest")
     @ResponseBody
     public String authtest() {
         return "authtest";
     }
 
-    @GetMapping("/usertest")
+    @GetMapping("/api/usertest")
     @ResponseBody
     public String usertest() {
         return "usertest";
     }
 
-    @PostMapping("/userposttest")
+    @PostMapping("/api/userposttest")
     @ResponseBody
     public String userposttest() {
         return "userposttest";
     }
 
-    @GetMapping("/admintest")
+    @GetMapping("/api/admintest")
     @ResponseBody
     public String admintest() {
         return "admintest";
     }
 
-    @GetMapping("/anytest")
+    @GetMapping("/api/anytest")
     @ResponseBody
     public String anytest() {
         return "anytest";
