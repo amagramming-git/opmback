@@ -53,12 +53,14 @@ public class ProjectSecurityConfig {
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/admintest")
                         .hasRole("ADMIN") // ADMIN
-                        .requestMatchers("/anytest").hasAnyRole("USER", "ADMIN")// ADMINもしくはUSER
-                        .requestMatchers("/usertest", "/userposttest", "/api/post/**")
+                        .requestMatchers("/api/anytest").hasAnyRole("USER", "ADMIN")// ADMINもしくはUSER
+                        .requestMatchers("/api/usertest", "/api/userposttest", "/api/post/**")
                         .hasRole("USER") // USER
-                        .requestMatchers("/authtest", "/api/customer/get", "/api/customer/me")
+                        .requestMatchers("/api/authtest", "/api/customer/get", "/api/customer/me")
                         .authenticated() // 認証の必要なリクエスト
-                        .requestMatchers("/normaltest", "/api/customer/register").permitAll()) // 認証の必要無いリクエスト
+                        .requestMatchers("/api/normaltest", "/api/actuator/**",
+                                "/api/customer/register")
+                        .permitAll()) // 認証の必要無いリクエスト
                 .anonymous((anonymous) -> anonymous.disable()).httpBasic(Customizer.withDefaults());
         return http.build();
     }

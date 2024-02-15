@@ -10,3 +10,5 @@ docker build --tag=kambe/opmback:1.0 .
 ローカルで動作確認
 MySQLの起動: docker-compose up -d mysql
 上記のbuildしたコンテナ(SpringBoot)の起動: docker run --detach -p 8080:8080 --network opmback_opm_network --env-file ./mysql/db.env --env-file ./dockerfiles/localdevelop/.env --name opmback kambe/opmback:1.0
+
+docker commit コンテナID kambe/opmback-mysql:1.0 
