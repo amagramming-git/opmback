@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthorityDto {
-    @JsonProperty("id")
-    private Integer id;
     @JsonProperty("customer_id")
     private Integer customerId;
     @JsonProperty("rolename")

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openmemo.opmback.entity.authority.AuthorityDto;
-import com.openmemo.opmback.mapper.authority.Authority;
+import com.openmemo.opmback.mapper.authority.AuthorityKey;
 import com.openmemo.opmback.mapper.authority.AuthorityExample;
 import com.openmemo.opmback.mapper.authority.AuthorityMapper;
 
@@ -18,32 +18,31 @@ public class AuthorityService {
     private AuthorityMapper authorityMapper;
 
     public int insertRoleUser(int customerId) {
-        Authority authority = new Authority();
+        AuthorityKey authority = new AuthorityKey();
         authority.setCustomerId(customerId);
         authority.setRolename("ROLE_USER");
-        return authorityMapper.insertCustom(authority);
+        return authorityMapper.insert(authority);
     }
 
     public List<AuthorityDto> selectCustomerId(int customerId) {
         AuthorityExample authorityExample = new AuthorityExample();
         authorityExample.createCriteria().andCustomerIdEqualTo(customerId);
-        List<Authority> postList = authorityMapper.selectByExample(authorityExample);
+        List<AuthorityKey> postList = authorityMapper.selectByExample(authorityExample);
         List<AuthorityDto> dtoList = setAuthorityDtoList(postList);
         return dtoList;
     }
 
-    private List<AuthorityDto> setAuthorityDtoList(List<Authority> authorityList) {
+    private List<AuthorityDto> setAuthorityDtoList(List<AuthorityKey> authorityList) {
         List<AuthorityDto> dtoList = new ArrayList<AuthorityDto>();
-        for (Authority authority : authorityList) {
+        for (AuthorityKey authority : authorityList) {
             AuthorityDto dto = setAuthorityDto(authority);
             dtoList.add(dto);
         }
         return dtoList;
     }
 
-    private AuthorityDto setAuthorityDto(Authority athority) {
+    private AuthorityDto setAuthorityDto(AuthorityKey athority) {
         AuthorityDto dto = new AuthorityDto();
-        dto.setId(athority.getId());
         dto.setCustomerId(athority.getCustomerId());
         dto.setRolename(athority.getRolename());
         return dto;

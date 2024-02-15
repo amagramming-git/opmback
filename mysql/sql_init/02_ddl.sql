@@ -15,10 +15,9 @@ CREATE TABLE `openmemo`.`customer` (
 );
 
 CREATE TABLE `openmemo`.`authority` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `customer_id` INT NOT NULL,
   `rolename` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`customer_id`,`rolename`)
 );
 
 
